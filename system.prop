@@ -73,6 +73,7 @@ persist.hvdcp.allow_opti=1
 
 # Fingerprint
 persist.qfp=false
+ro.fingerprint.cleanup.unused=false
 
 #Fm
 ro.fm.transmitter=false

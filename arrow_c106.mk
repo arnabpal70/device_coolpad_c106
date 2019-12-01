@@ -16,7 +16,7 @@
 
 # Boot animation
 TARGET_BOOT_ANIMATION_RES := 1080
-TARGET_BOOT_ANIMATION_RES_EVO := true
+#TARGET_BOOT_ANIMATION_RES_EVO := true
 
 # GAPPS
 WITH_GAPPS := true
@@ -27,28 +27,24 @@ IS_PHONE := true
 $(call inherit-product, device/coolpad/c106/full_c106.mk)
 
 # Inherit some common AOSP stuff.
-$(call inherit-product, vendor/aosp/config/common_full_phone.mk)
+$(call inherit-product, vendor/arrow/config/common.mk)
 
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := c106
-PRODUCT_NAME := aosp_c106
+PRODUCT_NAME := arrow_c106
 PRODUCT_BRAND := coolpad
-PRODUCT_MANUFACTURER := coolpad
+PRODUCT_MANUFACTURER := LeTv
 
 PRODUCT_GMS_CLIENTID_BASE := android-leeco
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    TARGET_DEVICE=le_c106 \
-    PRODUCT_NAME=c106_CN \
+    TARGET_DEVICE=c106 \
+    PRODUCT_NAME=cool1 \
     PRIVATE_BUILD_DESC="c1-user 6.0.1 ZIXOSOP5801803011S 0001832 release-keys"
 
 BUILD_FINGERPRINT := Coolpad/C103_C1-INDIA/C103:6.0.1/ZIXOSOP5801803011S/0001832:user/release-keys
 
-#PRODUCT_SYSTEM_PROPERTY_BLACKLIST += ro.product.model
+PRODUCT_SYSTEM_PROPERTY_BLACKLIST += ro.product.model
 
 # Release name
-PRODUCT_RELEASE_NAME := c106
-
-
-# Official
-CUSTOM_BUILD_TYPE=OFFICIAL
+PRODUCT_RELEASE_NAME := cool1

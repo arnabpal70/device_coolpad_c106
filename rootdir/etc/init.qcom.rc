@@ -26,6 +26,7 @@
 #
 
 import /vendor/etc/init/hw/init.target.rc
+import /vendor/etc/init/hw/init.safailnet.rc
 
 on early-init
     mount debugfs debugfs /sys/kernel/debug
@@ -88,6 +89,8 @@ on early-boot
     chmod 0664 /sys/class/graphics/fb0/mode
     chown system graphics /sys/class/graphics/fb0/mdp/bw_mode_bitmap
     chmod 0664 /sys/class/graphics/fb0/mdp/bw_mode_bitmap
+    
+    exec u:r:qti_init_shell:s0 -- /vendor/bin/init.qcom.early_boot.sh
 
 on boot
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
@@ -203,6 +206,10 @@ on boot
     chmod 0664 /dev/cpuset/camera-daemon/tasks
     write /dev/cpuset/camera-daemon/cpus 0-3
     write /dev/cpuset/camera-daemon/mems 0
+
+    # perfd waits until the property is set to 1 and refuses to acquire
+    # locks and process hints until it doesn't exists or it is empty.
+    setprop vendor.post_boot.parsed 1
 
 on post-fs
     # Wait qseecomd started
@@ -409,6 +416,7 @@ on property:sys.boot_completed=1
 
 on property:vold.decrypt=trigger_restart_framework
     start wcnss-service
+    restart vendor.camera-provider-2-4
 
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
@@ -441,6 +449,13 @@ service tftp_server /vendor/bin/tftp_server
     class core
     user root
     writepid /dev/cpuset/system-background/tasks
+
+service vendor.port-bridge /vendor/bin/port-bridge
+    class main
+    user radio
+    group radio system inet
+    disabled
+    oneshot
 
 # FM
 on property:hw.fm.init=0
@@ -599,14 +614,10 @@ service ril-daemon2 /vendor/bin/hw/rild -c 2
     group radio cache inet misc audio sdcard_r sdcard_rw diag log
     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
 
-on property:persist.radio.multisim.config=dsds
-    enable vendor.ril-daemon2
-
 service charger /vendor/bin/charger
     class charger
     group system graphics
     seclabel u:r:healthd:s0
-    writepid /dev/cpuset/system-background/tasks
 
 service vendor.msm_irqbalance /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
     class core
@@ -622,14 +633,8 @@ service vendor.msm_irqbal_lb /vendor/bin/msm_irqbalance -f /system/vendor/etc/ms
     disabled
     writepid /dev/cpuset/system-background/tasks
 
-on charger
-    setprop persist.sys.usb.config mass_storage
-    load_system_props
-    start qcom-post-boot
-
 on property:init.svc.surfaceflinger=restarting
-    stop vendor.hwcomposer-2-1
-    start vendor.hwcomposer-2-1
+    restart vendor.hwcomposer-2-1
 
 service time_daemon /system/vendor/bin/time_daemon
     class main

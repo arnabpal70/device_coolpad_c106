@@ -19,7 +19,7 @@ vendor/lib/rfsa/adsp/libexternal_dog_skel.so
 vendor/lib/rfsa/adsp/libfastcvadsp.so
 vendor/lib/rfsa/adsp/libfastcvadsp_skel.so
 
-# FIX camera
+# FIX camera ampir-nn
 vendor/lib/hw/camera.msm8952.so
 
 # ANT+
@@ -321,9 +321,6 @@ vendor/lib64/hw/vulkan.msm8952.so|a442c83cc25798de78fa0336358a85c8a7daccc3
 
 # IPA
 vendor/bin/ipacm-diag
-
-# Keystore
-vendor/lib64/hw/keystore.msm8952.so
 
 # Listen
 vendor/lib/hw/sound_trigger.primary.msm8952.so
